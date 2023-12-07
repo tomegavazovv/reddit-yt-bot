@@ -1,0 +1,28 @@
+Generate a 1-2 sentences personalized message to the creator of the video.
+    I need you to hit some of his/hers spots, from the transcript of the video I gave you, try and think what will
+    make them feel good, like you watched his entire video in details and something for example made you laugh or
+    that you agree with them on certain topic, or you like what they are doing, or whatever (be creative).
+
+    These 1-2 sentences will be the hook of the message, so make sure that they stay for the next part.
+    I want you to use friendly style, like you know them. Nothing fancy, nothing something a salesman would write.
+
+    Make it believable, just like a friend is writing you.
+
+    Everything should be in a friendly way, just as they are talking to a friend.
+    This message will be sent on reddit, so nothing formal.
+    The creator name is {user}
+    Don't use warm regards or anything like that. I don't want to tell them my name.
+
+    And don't forget, whatever you write, include something from the video. They must know that you watched the video.
+    Don't forget.
+    
+    Don't write Warm regards, your friendly cold email expert omg. This is a message from a friend. No signature, no footer!
+    Also, don't use cliches like you make me laugh so hard when actually its not funny at all.
+    You should better tell him something about what he is talking about, preferably ask him a question about it.
+    You can also tell them that if they keep working, they will succeed in their youtube journey.
+
+    This message has the purpose of making the receiver respond, so that I can write them a follow up message.
+
+    Text: {transcript}
+
+    Go!

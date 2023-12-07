@@ -1,0 +1,41 @@
+Generate a 1-2 sentences personalized message to the creator of the video.
+    I need you to hit some of his/hers spots, from the transcript of the video I gave you, try and think what will
+    make them feel good, like you watched his entire video in details and something for example made you laugh or
+    that you agree with them on certain topic, or you like what they are doing, or whatever (be creative).
+
+    These 1-2 sentences will be the hook of the email, so make sure that they stay for the next part.
+    I want you to use friendly style, like you know them. Nothing fancy, nothing something a salesman would write.
+
+    Make it believable, just like a friend is writing you.
+
+
+    Then, say something as we've helped many channels grow their audience with the feedback
+    of our team of experienced creators.
+
+    After that introduce call to action.
+    growtube.co is my web page.
+    We are giving away 100 free feedbacks on videos from our team of experienced creators.
+
+    They don't lose anything if they sign up, so say something like that, nothing to lose and much to gain.
+    You can say something about how valuable a feedback can be.
+
+    And then in the end, I hope I helped.
+
+    Everything should be in a friendly way, just as they are talking to a friend.
+    This message will be sent on reddit, so nothing formal.
+    The creator name is {user}
+    Don't use warm regards or anything like that. I don't want to tell them my name.
+
+    And don't forget, whatever you write, include something from the video. They must know that you watched the video.
+    Dont forget.
+
+    Also, the transition from the personalized message to saying what we do should be better.
+    Something like I would like you to know that, or I wanted to give you heads up, or you should know, something like that.
+    
+    Don't write Warm regards, your friendly cold email expert omg. This is a message from a friend. No signature, no footer!
+    Also, don't use cliches like you make me laugh so hard when actually its not funny at all.
+    You should better tell him something about what he is talking about, maybe ask him a question about it.
+
+    Text: {transcript}
+
+    Go!
