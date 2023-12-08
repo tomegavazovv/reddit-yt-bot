@@ -19,14 +19,16 @@ class OpenChat:
 class MessageSender:
 
     @staticmethod
-    def send_message(user, message):
+    def send_message(message):
+
         driver.execute_script(
             'var textarea = document.querySelector("body > faceplate-app > rs-app").shadowRoot.querySelector("div.container > rs-direct-chat").shadowRoot.querySelector("section > rs-message-composer").shadowRoot.querySelector("form > div > textarea");'
-            'textarea.value = arguments[0];',
+            'textarea.value = arguments[0];'
+            'console.log(arguments[0])',
             message
         )
-
         time.sleep(2)
+        print('test')
 
         driver.execute_script("""
             var form = document.querySelector("body > faceplate-app > rs-app").shadowRoot.querySelector("div.container > rs-direct-chat").shadowRoot.querySelector("section > rs-message-composer").shadowRoot.querySelector("form");
@@ -36,10 +38,6 @@ class MessageSender:
         """)
 
         time.sleep(2)
-
-        with open('sent_messages.txt', 'a') as sent_messages_file:
-            sent_messages_file.write(user + ':' + message + ';')
-            sent_messages_file.close()
 
 
 class ChatBot:
@@ -65,12 +63,43 @@ class ChatBot:
         driver.switch_to.frame(iframe)
 
     def send_message_old_acc(self, user, message):
-        time.sleep(3)
         self.load_user_page(user)
         time.sleep(3)
         OpenChat.open_chat_old_acc()
         time.sleep(6)
         self.switch_to_chat_iframe()
         time.sleep(2)
-        MessageSender.send_message(user, message)
+        MessageSender.send_message(message)
         time.sleep(2)
+
+    def send_message_new_acc(self, user, message):
+        self.load_user_page(user)
+        time.sleep(3)
+        OpenChat.open_chat_new_acc()
+        time.sleep(6)
+        driver.switch_to.window(driver.window_handles[1])
+        time.sleep(3)
+        MessageSender.send_message(message)
+        time.sleep(2)
+        driver.close()
+        time.sleep(1)
+        driver.switch_to.window(driver.window_handles[0])
+        time.sleep(1)
+
+    # def extract_messages(self, user):
+    #     self.load_user_page(user)
+    #     time.sleep(3)
+    #     OpenChat.open_chat_old_acc()
+    #     time.sleep(10)
+    #     self.switch_to_chat_iframe()
+    #     time.sleep(2)
+    #     messages = driver.execute_script(
+    #         'return document.querySelector("body > faceplate-app > rs-app").shadowRoot.querySelector("div.container > rs-room-overlay-manager > rs-room").shadowRoot.querySelector("main > rs-timeline").shadowRoot.querySelector("rs-virtual-scroll-dynamic").shadowRoot.querySelectorAll("rs-timeline-event");')
+
+    #     with open('successful_messages.txt', 'a') as f:
+    #         for message in messages:
+    #             f.write(message.text + ';/n')
+
+
+# bot = ChatBot()
+# bot.extract_messages('TapaniLastellar')

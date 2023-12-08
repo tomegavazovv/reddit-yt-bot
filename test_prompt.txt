@@ -35,3 +35,26 @@ Generate a 1-2 sentences personalized message to the creator of the video.
 
     Make the message short. 2-3 short sentences, or 1-2 a little bit longer.
     Go!
+
+
+I need to check my idea of creating a platform where youtubers can get feedback on their videos from more 
+experienced youtubers. 
+I want to be straightforward in my direct messaging to potential targets. I will message them on reddit 
+so i want the message to be as chill and friendly as it can be. 
+Ask them if they think that such a platform would be useful to them, and that their answer will mean so much.
+
+But firstly, in order to get them reading and not sound like a bot, I need you to ask them a question from 
+their latest posted video, whose transcript is: 
+{transcript}
+
+Something like hey (name of the user), I just watched your latest video and ask them a question, something about the video.
+This should be short and hooking, emotional etc. At most 2 sentences. Don't make them long. I just want them to know that 
+I have watched their video, so that they feel reciprocity to answer my question.
+
+And then ask them about the idea, would such a platform be of value to them? 
+I want you to use every bit of knowledge that you have, so that you make them answer the question!
+
+Also, separate the two parts with an empty line.
+
+The creator name is {user}
+

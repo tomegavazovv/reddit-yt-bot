@@ -7,7 +7,7 @@ from send_message import ChatBot
 
 openai.api_key = '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'
 OPENAI_MODEL = 'text-davinci-003'
-api_key = 'AIzaSyBDAWuQwQecoRS6SlnRL4cml-aCOBufii4'
+api_key = 'AIzaSyAemp7FObIIXrA1TuzAZon65sB2W2FxAYA'
 file_path = 'username_to_channel.txt'
 
 
@@ -84,6 +84,7 @@ class ChannelIdConverter:
 
     @staticmethod
     def channel_name_to_channel_id(channel_name):
+
         youtube = googleapiclient.discovery.build(
             "youtube", "v3", developerKey=api_key)
 
@@ -107,6 +108,7 @@ class ChannelIdConverter:
         ).execute()
 
         channel_id = video_response['items'][0]['snippet']['channelId']
+        channel_name = video_response['items'][0]['snippet']['title']
         return channel_id
 
 
@@ -167,7 +169,11 @@ def read_lines(limit):
     with open(file_path, 'r') as file:
         lines = file.readlines()
 
-    return lines[:limit]
+    with open(file_path, 'w') as file:
+        to_return = lines[:limit]
+        file.writelines(lines[limit:])
+
+    return to_return
 
 
 class MessageComposer:
@@ -188,7 +194,7 @@ class MessageComposer:
     @staticmethod
     def compose_message(transcript, user):
         system_prompt = "I would like for you to assume the role of a Cold Email Expert"
-        with open('prompt_without_ad.txt', 'r') as prompt:
+        with open('test_prompt.txt', 'r') as prompt:
             user_prompt = prompt.read()
         user_prompt = user_prompt.replace(
             '{user}', user).replace('{transcript}', transcript)
@@ -207,7 +213,7 @@ class MessageComposer:
 
 
 if __name__ == '__main__':
-    entries = read_lines(10)
+    entries = read_lines(5)
     user_to_channel_id = UserToChannelAggregator.aggregate_channels(entries)
     chatbot = ChatBot()
 
@@ -215,15 +221,27 @@ if __name__ == '__main__':
         try:
             latest_video_id = LatestVideoExtractor.extract_latest_video_by_channel_id(
                 entry['channel_id'])
+            user = entry['user']
+            channel_id = entry['channel_id']
 
             transcript = MessageComposer.get_transcript(latest_video_id)
 
             message = MessageComposer.compose_message(
-                transcript, entry['user'])
+                transcript, user)
             try:
-                chatbot.send_message_old_acc(entry['user'], message)
+                chatbot.send_message_old_acc(user, message)
+                with open('sent_messages.txt', 'a') as sent_messages_file:
+                    sent_messages_file.write(
+                        user + ':' + message + ':' + channel_id + ';/n')
+
+                with open(file_path, 'r') as file:
+                    lines = file.readlines()
+                with open(file_path, 'w') as file:
+                    for line in lines:
+                        if line.strip() != entry:
+                            file.write(line)
             except Exception as e:
                 print(e)
 
         except Exception as e:
-            print('nema video ili transcript za ' + str(entry['user']))
+            print(e)
