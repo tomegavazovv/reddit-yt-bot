@@ -3,51 +3,60 @@ from youtube_transcript_api import YouTubeTranscriptApi as yta
 from googleapiclient.discovery import build
 import googleapiclient.discovery
 from send_message import ChatBot
+import database
+from firebase_admin import db
 
 
 openai.api_key = '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'
 OPENAI_MODEL = 'text-davinci-003'
-api_key = 'AIzaSyAemp7FObIIXrA1TuzAZon65sB2W2FxAYA'
-file_path = 'username_to_channel.txt'
+api_key = 'AIzaSyBVbqBfWnB1JgfAIT-ettiX_NBX8brylTE'
+file_path = 'files/username_to_channel.txt'
+
+
+class User:
+    def __init__(self, username, link):
+        self.username = username
+        self.link = link
+        self.contacted = False
 
 
 class ChannelCategorizer:
 
     @staticmethod
-    def categorize_entries_by_link_type(entries):
+    def categorize_entries_by_link_type(users):
         categorized_entries = {
             'channel_name': [],
             'channel_id': [],
             'video_id': []
         }
 
-        for entry in entries:
-            link = entry.split(':')[2]
+        for user in users:
+            link = user.link
             if link.find('@') != -1 or link.find('youtube.com/c/') != -1:
-                categorized_entries['channel_name'].append(entry)
+                categorized_entries['channel_name'].append(user)
             elif link.find('watch?v=') != -1:
-                categorized_entries['video_id'].append(entry)
+                categorized_entries['video_id'].append(user)
             else:
-                categorized_entries['channel_id'].append(entry)
+                categorized_entries['channel_id'].append(user)
         return categorized_entries
 
 
 class ChannelNameExtractor:
 
     @staticmethod
-    def extract_channels(entries):
+    def extract_channels(users):
         user_to_channel_name = []
 
-        for entry in entries:
+        for user in users:
+            username = user.username
+            link = user.link
 
-            user = entry.split(':')[0]
-
-            if entry.find("@") != -1:
+            if link.find("@") != -1:
                 user_to_channel_name.append(
-                    {'user': user, 'channel_name': '@'+entry.split('@')[1].split('/')[0].split('?')[0].split(';')[0]})
+                    {'user': username, 'channel_name': '@'+link.split('@')[1].split('/')[0].split('?')[0].split(';')[0]})
             else:
                 user_to_channel_name.append(
-                    {'user': user, 'channel_name': '@'+entry.split('/c/')[1].split('?')[0].split(';')[0]})
+                    {'user': username, 'channel_name': '@'+link.split('/c/')[1].split('?')[0].split(';')[0]})
 
         return user_to_channel_name
 
@@ -55,13 +64,14 @@ class ChannelNameExtractor:
 class ChannelIdExtractor:
 
     @staticmethod
-    def extract_channels(entries):
+    def extract_channels(users):
         user_to_channel_id = []
-        for entry in entries:
-            user = entry.split(':')[0]
+        for user in users:
+            username = user.username
+            link = user.link
 
             user_to_channel_id.append(
-                {'user': user, 'channel_id': entry.split('/')[-1].split(';')[0]})
+                {'user': username, 'channel_id': link.split('/')[-1].split(';')[0]})
 
         return user_to_channel_id
 
@@ -69,14 +79,14 @@ class ChannelIdExtractor:
 class VideoIdExtractor:
 
     @staticmethod
-    def extract_video_ids(entries):
+    def extract_video_ids(users):
         user_to_video_id = []
 
-        for entry in entries:
-            user = entry.split(":")[0]
-            link = entry.split(":")[2]
-            video_id = link.split('v=')[1][:-2]
-            user_to_video_id.append({'user': user, 'video_id': video_id})
+        for user in users:
+            username = user.username
+            link = user.link
+            video_id = link.split('v=')[1].split('&')[0].split(';')[0]
+            user_to_video_id.append({'user': username, 'video_id': video_id})
         return user_to_video_id
 
 
@@ -84,7 +94,6 @@ class ChannelIdConverter:
 
     @staticmethod
     def channel_name_to_channel_id(channel_name):
-
         youtube = googleapiclient.discovery.build(
             "youtube", "v3", developerKey=api_key)
 
@@ -140,9 +149,9 @@ class LatestVideoExtractor:
 class UserToChannelAggregator:
 
     @staticmethod
-    def aggregate_channels(entries):
+    def aggregate_channels(users):
         categorized_entries = ChannelCategorizer.categorize_entries_by_link_type(
-            entries)
+            users)
 
         user_to_channel_name = ChannelNameExtractor.extract_channels(
             categorized_entries['channel_name'])
@@ -153,33 +162,30 @@ class UserToChannelAggregator:
             categorized_entries['video_id'])
 
         for entry in user_to_channel_name:
-            converted = {'user': entry['user'], 'channel_id': ChannelIdConverter.channel_name_to_channel_id(
-                entry['channel_name'])}
-            user_to_channel_id.append(converted)
+            try:
+                converted = {'user': entry['user'], 'channel_id': ChannelIdConverter.channel_name_to_channel_id(
+                    entry['channel_name'])}
+                user_to_channel_id.append(converted)
+            except Exception as e:
+                print("Channel doesn't exist error " +
+                      str(entry['channel_name']))
 
         for entry in user_to_video_id:
-            converted = {'user': entry['user'], 'channel_id': ChannelIdConverter.video_id_to_channel_id(
-                entry['video_id'])}
-            user_to_channel_id.append(converted)
+            try:
+                converted = {'user': entry['user'], 'channel_id': ChannelIdConverter.video_id_to_channel_id(
+                    entry['video_id'])}
+                user_to_channel_id.append(converted)
+            except Exception as e:
+                print("Channel doesn't exist error " + str(entry['video_id']))
 
         return user_to_channel_id
-
-
-def read_lines(limit):
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-
-    with open(file_path, 'w') as file:
-        to_return = lines[:limit]
-        file.writelines(lines[limit:])
-
-    return to_return
 
 
 class MessageComposer:
 
     @staticmethod
     def get_transcript(video_id):
+
         data = yta.get_transcript(video_id)
         transcript = ''
 
@@ -194,7 +200,7 @@ class MessageComposer:
     @staticmethod
     def compose_message(transcript, user):
         system_prompt = "I would like for you to assume the role of a Cold Email Expert"
-        with open('test_prompt.txt', 'r') as prompt:
+        with open('prompts/test_prompt.txt', 'r') as prompt:
             user_prompt = prompt.read()
         user_prompt = user_prompt.replace(
             '{user}', user).replace('{transcript}', transcript)
@@ -212,9 +218,30 @@ class MessageComposer:
         return response.choices[0].message.content
 
 
+def get_users(limit):
+    users = db.reference('users')
+    uncontacted = []
+    for key, user in users.order_by_key().get().items():
+        if 'contacted' not in user:
+            uncontacted.append(User(user['username'], user['link']))
+
+    return uncontacted[:limit]
+
+
+def mark_contacted(username):
+    user_ref = db.reference('users')
+    user_snapshot = user_ref.order_by_child(
+        'username').equal_to(username).limit_to_first(1).get()
+
+    if user_snapshot:
+        key, user_data = next(iter(user_snapshot.items()))
+        user_data['contacted'] = True
+        user_ref.child(key).update(user_data)
+
+
 if __name__ == '__main__':
-    entries = read_lines(5)
-    user_to_channel_id = UserToChannelAggregator.aggregate_channels(entries)
+    users = get_users(5)
+    user_to_channel_id = UserToChannelAggregator.aggregate_channels(users)
     chatbot = ChatBot()
 
     for entry in user_to_channel_id:
@@ -224,24 +251,19 @@ if __name__ == '__main__':
             user = entry['user']
             channel_id = entry['channel_id']
 
-            transcript = MessageComposer.get_transcript(latest_video_id)
-
-            message = MessageComposer.compose_message(
-                transcript, user)
             try:
-                chatbot.send_message_old_acc(user, message)
-                with open('sent_messages.txt', 'a') as sent_messages_file:
-                    sent_messages_file.write(
-                        user + ':' + message + ':' + channel_id + ';/n')
+                transcript = MessageComposer.get_transcript(latest_video_id)
 
-                with open(file_path, 'r') as file:
-                    lines = file.readlines()
-                with open(file_path, 'w') as file:
-                    for line in lines:
-                        if line.strip() != entry:
-                            file.write(line)
+                message = MessageComposer.compose_message(
+                    transcript, user)
+                try:
+                    chatbot.send_message_old_acc(user, message)
+                except Exception as e:
+                    print(e)
             except Exception as e:
-                print(e)
+                print('nema transcript za channel ' + str(channel_id))
 
         except Exception as e:
             print(e)
+        finally:
+            mark_contacted(entry['user'])

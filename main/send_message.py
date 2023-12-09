@@ -46,8 +46,8 @@ class ChatBot:
         self.login()
 
     def login(self):
-        username = 'BackgroundProper6340'
-        password = 'dekasibe223'
+        username = 'megamister70'
+        password = 'NekojTip'
         driver.get("https://www.reddit.com/login")
         driver.find_element(By.ID, "loginUsername").send_keys(username)
         driver.find_element(By.ID, "loginPassword").send_keys(password)
