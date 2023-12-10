@@ -16,5 +16,5 @@ with open('files/username_to_channel.txt', 'r') as file:
 
 for line in lines:
     username = line.split(':')[0]
-    link = line.split(':')[1].__add__(line.split(':')[2])
+    link = line.split(':')[1] + ':' + (line.split(':')[2])
     users_ref.push({'username': username, 'link': link})

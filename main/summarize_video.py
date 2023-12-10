@@ -9,7 +9,8 @@ from firebase_admin import db
 
 openai.api_key = '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'
 OPENAI_MODEL = 'text-davinci-003'
-api_key = 'AIzaSyBVbqBfWnB1JgfAIT-ettiX_NBX8brylTE'
+# tomegavazov
+api_key = 'AIzaSyBDAWuQwQecoRS6SlnRL4cml-aCOBufii4'
 file_path = 'files/username_to_channel.txt'
 
 
@@ -232,6 +233,7 @@ def mark_contacted(username):
     user_ref = db.reference('users')
     user_snapshot = user_ref.order_by_child(
         'username').equal_to(username).limit_to_first(1).get()
+    print('mark contacted ' + username)
 
     if user_snapshot:
         key, user_data = next(iter(user_snapshot.items()))
@@ -240,7 +242,7 @@ def mark_contacted(username):
 
 
 if __name__ == '__main__':
-    users = get_users(5)
+    users = get_users(10)
     user_to_channel_id = UserToChannelAggregator.aggregate_channels(users)
     chatbot = ChatBot()
 
@@ -253,7 +255,6 @@ if __name__ == '__main__':
 
             try:
                 transcript = MessageComposer.get_transcript(latest_video_id)
-
                 message = MessageComposer.compose_message(
                     transcript, user)
                 try:

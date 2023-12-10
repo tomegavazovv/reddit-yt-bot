@@ -46,8 +46,8 @@ class ChatBot:
         self.login()
 
     def login(self):
-        username = 'megamister70'
-        password = 'NekojTip'
+        username = 'BackgroundProper6340'
+        password = 'dekasibe223'
         driver.get("https://www.reddit.com/login")
         driver.find_element(By.ID, "loginUsername").send_keys(username)
         driver.find_element(By.ID, "loginPassword").send_keys(password)
@@ -66,7 +66,7 @@ class ChatBot:
         self.load_user_page(user)
         time.sleep(3)
         OpenChat.open_chat_old_acc()
-        time.sleep(6)
+        time.sleep(10)
         self.switch_to_chat_iframe()
         time.sleep(2)
         MessageSender.send_message(message)
