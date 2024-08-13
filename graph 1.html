@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Chart.js Bar Chart Example</title>
+		<!-- Import Chart.js library -->
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	</head>
+	<style>
+		body {
+			width: 100vw;
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+		.chart {
+			width: 70%;
+			height: 70%;
+		}
+
+		.main_platform {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+		}
+	</style>
+	<body>
+		<!-- Canvas element for the chart -->
+		<div class="chart">
+			<canvas id="myChart" width="300px" height="300px"></canvas>
+		</div>
+		<div>
+			<h2>Main Platform of the Creator:</h3>
+		</div>
+		<div class="main_platform">
+			<input type="radio" id="none" name="platform" gro value="none" checked />
+			<label for="none">None</label><br />
+			<input type="radio" id="youtube" name="platform" value="youtube" />
+			<label for="youtube">YouTube</label><br />
+			<input type="radio" id="instagram" name="platform" value="instagram" />
+			<label for="instagram">Instagram</label><br />
+		</div>
+
+		<script>
+			function updateChartData(instagramData, youtubeData) {
+				console.log(instagramData)
+				myChart.data.datasets[0].data = instagramData
+				myChart.data.datasets[1].data = youtubeData
+				myChart.update()
+			}
+
+			function onRadioChange() {
+				let checkedPlatform = ''
+				for (var i = 0; i < radios.length; i++) {
+					if (radios[i].checked) {
+						checkedPlatform = radios[i].value
+					}
+				}
+				youtubeData = by_main_platform[checkedPlatform]['youtube']
+				instagramData = by_main_platform[checkedPlatform]['instagram']
+				updateChartData(instagramData, youtubeData)
+			}
+
+			var ctx = document.getElementById('myChart').getContext('2d')
+
+			var by_main_platform = {
+				none: {
+					youtube: [83.18, 36.12, 7.43, 15],
+					instagram: [53.34, 9.28, 8.3, 8.6],
+				},
+				youtube: {
+					youtube: [61.5, 52.64, 15.65, 33.7],
+					instagram: [45.13, 9.5, 10.65, 7.41],
+				},
+				instagram: {
+					youtube: [50.57, 31.3, 6.66, 10.63],
+					instagram: [55, 7.3, 9.1, 10.2],
+				},
+			}
+
+			var radios = document.querySelectorAll(
+				'.main_platform input[type="radio"]'
+			)
+
+			radios.forEach(function (radio) {
+				radio.addEventListener('change', onRadioChange)
+			})
+
+			var myChart = new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: ['Discord', 'Patreon', 'Kajabi', 'Thinkific'],
+					datasets: [
+						{
+							label: 'Instagram Engagement Percent Increasement',
+							data: [53.34, 9.28, 8.3, 8.6],
+							backgroundColor: 'rgba(54, 162, 235, 0.8)',
+							borderWidth: 1,
+						},
+						{
+							label: 'Youtube Engagement Percent Increasement',
+							data: [83.18, 36.12, 7.43, 15],
+							backgroundColor: 'rgba(255, 99, 132, 0.8)',
+							borderWidth: 1,
+						},
+					],
+				},
+				options: {
+					responsive: true,
+					scales: {
+						y: {
+							beginAtZero: true,
+              max: 100,
+							ticks: {
+								font: {
+									size: 15,
+									family: 'Arial',
+									weight: 'bold',
+								},
+								callback: function (value, index, values) {
+									return value + '%'
+								},
+							},
+						},
+						x: {
+							ticks: {
+								font: {
+									size: 15,
+									family: 'Arial',
+									weight: 'bold',
+								},
+							},
+						},
+					},
+					plugins: {
+						legend: {
+							position: 'top',
+							labels: {
+								font: {
+									size: 15,
+									family: 'Arial',
+								},
+							},
+						},
+						title: {
+							display: true,
+							text: 'Community Impact On Engagement Rate',
+							font: {
+								size: 30,
+								family: 'Arial',
+								weight: 'bold',
+							},
+						},
+					},
+				},
+			})
+		</script>
+	</body>
+</html>

@@ -1,16 +1,15 @@
 import openai
-from youtube_transcript_api import YouTubeTranscriptApi as yta
 from googleapiclient.discovery import build
 import googleapiclient.discovery
-from send_message import ChatBot
+from send_message import ChatBot, MessageComposer
 import database
 from firebase_admin import db
 
 
-openai.api_key = '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'
-OPENAI_MODEL = 'text-davinci-003'
+openai.api_key = 'your-key'
+OPENAI_MODEL = 'model'
 # tomegavazov
-api_key = 'AIzaSyBDAWuQwQecoRS6SlnRL4cml-aCOBufii4'
+api_key = 'api key'
 file_path = 'files/username_to_channel.txt'
 
 
@@ -182,43 +181,6 @@ class UserToChannelAggregator:
         return user_to_channel_id
 
 
-class MessageComposer:
-
-    @staticmethod
-    def get_transcript(video_id):
-
-        data = yta.get_transcript(video_id)
-        transcript = ''
-
-        for value in data:
-            for key, val in value.items():
-                if key == 'text':
-                    transcript += val
-                    l = transcript.splitlines()
-
-        return ' '.join(l)[:5000]
-
-    @staticmethod
-    def compose_message(transcript, user):
-        system_prompt = "I would like for you to assume the role of a Cold Email Expert"
-        with open('prompts/test_prompt.txt', 'r') as prompt:
-            user_prompt = prompt.read()
-        user_prompt = user_prompt.replace(
-            '{user}', user).replace('{transcript}', transcript)
-
-        response = openai.chat.completions.create(
-            model='gpt-3.5-turbo-16k',
-            messages=[
-                {'role': 'system', 'content': system_prompt},
-                {'role': 'user', 'content': user_prompt}
-            ],
-            max_tokens=4096,
-            temperature=1
-        )
-
-        return response.choices[0].message.content
-
-
 def get_users(limit):
     users = db.reference('users')
     uncontacted = []
@@ -231,18 +193,18 @@ def get_users(limit):
 
 def mark_contacted(username):
     user_ref = db.reference('users')
-    user_snapshot = user_ref.order_by_child(
-        'username').equal_to(username).limit_to_first(1).get()
-    print('mark contacted ' + username)
-
-    if user_snapshot:
-        key, user_data = next(iter(user_snapshot.items()))
+    user_snapshots = user_ref.order_by_child(
+        'username').equal_to(username).limit_to_first(10).get()
+    for user_snapshot in user_snapshots.items():
+        print(user_snapshot)
+        key = user_snapshot[0]
+        user_data = user_snapshot[1]
         user_data['contacted'] = True
         user_ref.child(key).update(user_data)
 
 
 if __name__ == '__main__':
-    users = get_users(10)
+    users = get_users(20)
     user_to_channel_id = UserToChannelAggregator.aggregate_channels(users)
     chatbot = ChatBot()
 
@@ -258,7 +220,8 @@ if __name__ == '__main__':
                 message = MessageComposer.compose_message(
                     transcript, user)
                 try:
-                    chatbot.send_message_old_acc(user, message)
+                    chatbot.send_message_old_acc(
+                        user, message.replace("[Your Name]", ''))
                 except Exception as e:
                     print(e)
             except Exception as e:

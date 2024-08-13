@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Chart.js Bar Chart Example</title>
+		<!-- Import Chart.js library -->
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	</head>
+	<style>
+		body {
+			width: 100vw;
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+		.chart {
+			width: 70%;
+			height: 70%;
+		}
+
+		.communities {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+		}
+	</style>
+	<body>
+		<div class="chart">
+			<canvas id="myChart" width="300px" height="300px"></canvas>
+		</div>
+		<div>
+			<h2>Has Community On:</h3>
+		</div>
+		<div class="communities">
+			<input type="checkbox" id="discord" name="community" value="discord" checked />
+			<label for="discord">Discord</label><br />
+			<input type="checkbox" id="patreon" name="community" value="patreon" checked/>
+			<label for="patreon">Patreon</label><br />
+			<input type="checkbox" id="kajabi" name="community" value="kajabi" checked/>
+			<label for="kajabi">Kajabi</label><br />
+      <input type="checkbox" id="thinkific" name="community" value="thinkific" checked/>
+			<label for="thinkific">Thinkific</label><br />
+		</div>
+
+
+    <div class="main_platform">
+      <h2>Main Platform of the Creator:</h2>
+			<input type="radio" id="none" name="platform" value="none" checked />
+			<label for="none">None</label><br />
+			<input type="radio" id="youtube" name="platform" value="youtube" />
+			<label for="youtube">YouTube</label><br />
+			<input type="radio" id="instagram" name="platform" value="instagram" />
+			<label for="instagram">Instagram</label><br />
+		</div>
+		<script>
+
+			function updateChartData(data) {
+        myChart.data.datasets[0].data = [data['youtube'], data['instagram']]
+				myChart.update()
+			}
+
+			function onCheckboxChange() {
+				let checkedCommunities = []
+				for (var i = 0; i < checkboxes.length; i++) {
+					if (checkboxes[i].checked) {
+						checkedCommunities.push(checkboxes[i].value)
+					}
+				}
+        let selectedPlatform = 'none'
+        for (var i = 0; i < radios.length; i++) {
+					if (radios[i].checked) {
+						selectedPlatform = radios[i].value
+					}
+				}
+        console.log(selectedPlatform)
+
+        checked = checkedCommunities.join(',')
+        data = {}
+        if(selectedPlatform == 'none'){
+          data = none_main_platform[checked]
+        }else {
+          data = youtube_main_platform[checked]
+        }
+        updateChartData(data)
+			}
+
+			var ctx = document.getElementById('myChart').getContext('2d')
+
+			var none_main_platform = {
+				'discord,patreon,kajabi,thinkific': {
+					instagram: 53.38,
+          youtube: 46,
+				},
+				'discord,patreon,kajabi': {
+					instagram: 54.53,
+          youtube: 46.24,
+				},
+        'discord,patreon,thinkific':{
+          instagram: 55.7,
+          youtube: 46.64,
+        },
+        'patreon,kajabi,thinkific': {
+          instagram: 7.2,
+          youtube: 36.23
+        },
+        'discord,kajabi,thinkific': {
+          instagram: 86.41,
+          youtube: 51.1
+        },
+				'discord,patreon': {
+					instagram: 56.9,
+          youtube: 47,
+				},
+        'discord,kajabi': {
+          instagram: 89.22,
+          youtube: 51.9,
+        },
+        'discord,thinkific': {
+          instagram: 92.30,
+          youtube: 53,
+        },
+        'patreon,kajabi': {
+          instagram: 7,
+          youtube: 36,
+        },
+        'patreon,thinkific': {
+          instagram: 8,
+          youtube: 36,
+        },
+        'kajabi,thinkific': {
+          instagram: 5,
+          youtube: 12,
+        },
+        'discord': {
+          instagram: 53.34,
+          youtube: 83.18,
+        },
+        'patreon': {
+          instagram: 9.28,
+          youtube: 36.12,
+        },
+        'kajabi': {
+          instagram: 8.3,
+          youtube: 7.43,
+        },
+        'thinkific': {
+          instagram: 8.6,
+          youtube: 15
+        }
+			}
+
+      var youtube_main_platform = {
+        'discord,patreon,kajabi,thinkific': {
+					instagram: 32.67,
+          youtube: 60.1,
+				},
+				'discord,patreon,kajabi': {
+					instagram: 33,
+          youtube: 60.2,
+				},
+        'discord,patreon,thinkific':{
+          instagram: 32.86,
+          youtube: 62.1,
+        },
+        'patreon,kajabi,thinkific': {
+          instagram: 8.16,
+          youtube: 51.64
+        },
+        'discord,kajabi,thinkific': {
+          instagram: 40.2,
+          youtube: 61.9
+        },
+				'discord,patreon': {
+					instagram: 33.64,
+          youtube: 64.29,
+				},
+        'discord,kajabi': {
+          instagram: 44.4,
+          youtube: 61.7,
+        },
+        'discord,thinkific': {
+          instagram: 43.30,
+          youtube: 61.5,
+        },
+        'patreon,kajabi': {
+          instagram: 9.31,
+          youtube: 52.23,
+        },
+        'patreon,thinkific': {
+          instagram: 8.18,
+          youtube: 52.44,
+        },
+        'kajabi,thinkific': {
+          instagram: 2,
+          youtube: 19,
+        },
+        'discord': {
+          instagram: 45.13,
+          youtube: 62.5,
+        },
+        'patreon': {
+          instagram: 9.28,
+          youtube: 52.64,
+        },
+        'kajabi': {
+          instagram: 6.65,
+          youtube: 4.19,
+        },
+        'thinkific': {
+          instagram: 1,
+          youtube: 35.7
+        }
+			}
+      
+      var instagram_main_platform = {
+        'discord,patreon,kajabi,thinkific': {
+					instagram: 53.38,
+          youtube: 46,
+				},
+				'discord,patreon,kajabi': {
+					instagram: 54.53,
+          youtube: 46.24,
+				},
+        'discord,patreon,thinkific':{
+          instagram: 55.7,
+          youtube: 46.64,
+        },
+        'patreon,kajabi,thinkific': {
+          instagram: 7.2,
+          youtube: 36.23
+        },
+        'discord,kajabi,thinkific': {
+          instagram: 86.41,
+          youtube: 51.1
+        },
+				'discord,patreon': {
+					instagram: 56.9,
+          youtube: 47,
+				},
+        'discord,kajabi': {
+          instagram: 89.22,
+          youtube: 51.9,
+        },
+        'discord,thinkific': {
+          instagram: 92.30,
+          youtube: 53,
+        },
+        'patreon,kajabi': {
+          instagram: 7,
+          youtube: 36,
+        },
+        'patreon,thinkific': {
+          instagram: 8,
+          youtube: 36,
+        },
+        'kajabi,thinkific': {
+          instagram: 5,
+          youtube: 12,
+        },
+        'discord': {
+          instagram: 53.34,
+          youtube: 83.18,
+        },
+        'patreon': {
+          instagram: 9.28,
+          youtube: 36.12,
+        },
+        'kajabi': {
+          instagram: 8.3,
+          youtube: 7.43,
+        },
+        'thinkific': {
+          instagram: 8.6,
+          youtube: 15
+        }
+			}
+
+      var data = none_main_platform['discord,patreon,kajabi,thinkific']
+
+
+
+			var checkboxes = document.querySelectorAll(
+				'.communities input[type="checkbox"]'
+			)
+
+      var radios = document.querySelectorAll(
+				'.main_platform input[type="radio"]'
+			)
+
+			radios.forEach(function (radio) {
+				radio.addEventListener('change', onCheckboxChange)
+			})
+
+			checkboxes.forEach(function (checkbox) {
+				checkbox.addEventListener('change', onCheckboxChange)
+			})
+
+
+			var myChart = new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: ['YouTube', 'Instagram'],
+					datasets: [
+						{
+							data: [data['youtube'], data['instagram']],
+							backgroundColor: ['rgba(255, 99, 132, 0.8)', 'rgba(54, 162, 235, 0.8)'],
+							borderWidth: 1,
+						},
+					],
+				},
+				options: {
+					responsive: true,
+					scales: {
+						y: {
+							beginAtZero: true,
+              max: 100,
+							ticks: {
+								font: {
+									size: 15,
+									family: 'Arial',
+									weight: 'bold',
+								},
+								callback: function (value, index, values) {
+									return value + '%'
+								},
+							},
+						},
+						x: {
+							ticks: {
+								font: {
+									size: 15,
+									family: 'Arial',
+									weight: 'bold',
+								},
+							},
+						},
+					},
+					plugins: {
+						legend: {
+							display: false
+						},
+						title: {
+							display: true,
+							text: 'Community Impact On Engagement Rate',
+							font: {
+								size: 30,
+								family: 'Arial',
+								weight: 'bold',
+							},
+						},
+					},
+				},
+			})
+		</script>
+	</body>
+</html>

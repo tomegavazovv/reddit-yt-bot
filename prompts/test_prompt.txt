@@ -1,60 +1,29 @@
-Generate a 1-2 sentences personalized message to the creator of the video.
-    I need you to hit some of his/hers spots, from the transcript of the video I gave you, try and think what will
-    make them feel good, like you watched his entire video in details and something for example made you laugh or
-    that you agree with them on certain topic, or you like what they are doing, or whatever (be creative).
-
-    These 1-2 sentences will be the hook of the message, so make sure that they stay for the next part.
-    I want you to use friendly style, like you know them. Nothing fancy, nothing something a salesman would write.
-
-    Make it believable, just like a friend is writing you.
-
-    Everything should be in a friendly way, just as they are talking to a friend.
-    This message will be sent on reddit, so nothing formal.
-    The creator name is {user}
-    Don't use warm regards or anything like that. I don't want to tell them my name.
-
-    And don't forget, whatever you write, include something from the video. They must know that you watched the video.
-    Don't forget.
-    
-    Don't write Warm regards, your friendly cold email expert omg. This is a message from a friend. No signature, no footer!
-    Also, don't use cliches like you make me laugh so hard when actually its not funny at all.
-
-    You can also tell them that if they keep working, they will succeed in their youtube journey.
-
-    This message has the purpose of making the receiver respond, so that I can write them a follow up message.
-
-
-    Write him about something that he talks about, ask him a question about it. 
-    You can use your knowledge and expand on his point maybe.
-    The purpose of the message is for the receiver to respond to it, so make the best of it.
-
-    You must ask them a question! Either on the editing, the storytelling, the niche, voiceover etc. 
-    Choose one and ask them about it.
-    Text: {transcript}
-
-
-    Make the message short. 2-3 short sentences, or 1-2 a little bit longer.
-    Go!
-
-
 I need to check my idea of creating a platform where youtubers can get feedback on their videos from more 
 experienced youtubers. 
 I want to be straightforward in my direct messaging to potential targets. I will message them on reddit 
 so i want the message to be as chill and friendly as it can be. 
-Ask them if they think that such a platform would be useful to them, and that their answer will mean so much.
 
-But firstly, in order to get them reading and not sound like a bot, I need you to ask them a question from 
+
+Firstly, in order to get them reading and not sound like a bot, I need you to ask them a question from 
 their latest posted video, whose transcript is: 
 {transcript}
 
 Something like hey (name of the user), I just watched your latest video and ask them a question, something about the video.
-This should be short and hooking, emotional etc. At most 2 sentences. Don't make them long. I just want them to know that 
+This should be short and hooking, emotional etc. At most 2 sentences. Don't make it long. I just want them to know that 
 I have watched their video, so that they feel reciprocity to answer my question.
 
-And then ask them about the idea, would such a platform be of value to them? 
-I want you to use every bit of knowledge that you have, so that you make them answer the question!
+After that, based on your knowledge about what makes a viral youtube video, mildly criticise them. 
+Something about the storyline, the editing, the voiceover, the intro etc.
+
+After that mild critique, ask him does he want to get feedback on his video. 
+Tell him that it is not much work, that he just needs few tweaks to dramatically increase his views.
 
 Also, separate the two parts with an empty line.
+
+Don't put Subject in the message. Please. Make it as less formal as possible. Just as an old friends messaging.
+
+Don't mention anything like Best Regards, [Your Name] or etc. Because sometimes you do. 
+Finish with something like "let me know if you are interested".
 
 The creator name is {user}
 
